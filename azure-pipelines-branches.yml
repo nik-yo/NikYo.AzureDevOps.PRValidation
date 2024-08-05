@@ -1,0 +1,17 @@
+trigger: none
+
+pool:
+  vmImage: windows-latest
+
+steps:
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $source = "$(System.PullRequest.SourceBranch)"
+      Write-Host "Source: $source"
+      if (($source -notlike "refs/heads/qa") -and ($source -notlike "refs/heads/hotfix*"))
+      {
+          Write-Host "Unauthorized source"
+          exit 1
+      }
